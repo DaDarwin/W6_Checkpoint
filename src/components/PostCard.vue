@@ -7,7 +7,7 @@
             <button
                 @click="likePost()"
                 class="btn btn-outline-primary m-1">
-                <i class="mdi text-primary fs-2" :class="{ stuff: {"mdi-heart": post.likeIds.includes(account.id)}aye: {"mdi-heart-outline": post.likeIds.includes(account.id)}}"></i>
+                <i class="mdi text-primary fs-2" :class="{"mdi-heart": post.likeIds.includes(account.id),"mdi-heart-outline": !post.likeIds.includes(account.id)}"></i>
             </button>
             <button 
                 v-if="post.creatorID == account.id"
