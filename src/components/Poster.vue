@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="post()">
+    <form @submit.prevent="makePost()">
         <textarea v-model="postData.body" minlength="1" maxlength="5000" rows="10" name="post-body" id="post-body" type="text"/>
         <button type="submit">Submit</button>
     </form>
@@ -29,7 +29,7 @@ export default {
         }
     return {
         postData,
-        post(){
+        makePost(){
             try{
                 // logger.log(postData.value)
                 if(props.post){

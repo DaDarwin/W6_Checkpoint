@@ -13,6 +13,8 @@ import { computed, onMounted } from 'vue';
 import Pop from '../utils/Pop';
 import { postService } from '../services/PostService.js'
 import { AppState } from '../AppState.js'
+import  PostCard  from '../components/PostCard.vue'
+import Poster from '../components/Poster.vue'
 export default {
   setup() {
     onMounted(()=> getPosts())
@@ -27,7 +29,8 @@ export default {
     return {
       posts: computed(()=> AppState.posts)
     }
-  }
+  },
+  components:{Poster, PostCard}
 }
 </script>
 
