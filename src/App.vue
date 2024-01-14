@@ -1,12 +1,12 @@
 <template>
   <header>
-    <Navbar />
+    <Navbar class="fixed-top mb-5"/>
   </header>
-  <main>
+  <main class="container-fluid">
     <router-view />
   </main>
    <footer class="bg-dark text-light">
-    Made with 💖 by CodeWorks
+    The Network ©
   </footer>
 </template>
 
@@ -19,6 +19,7 @@ export default {
   setup() {
     return {
       appState: computed(() => AppState)
+      
     }
   },
   components: { Navbar }

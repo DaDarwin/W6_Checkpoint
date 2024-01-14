@@ -1,35 +1,52 @@
 <template>
-    <div class="d-flex">
-        <p>
+    <div class="row justify-content-between border border-2 rounded m-2 bg-card" :class="{'border-success': post.creator.graduated,'bg-dark': post.creator.graduated, 'border-secondary': !post.creator.graduated}">
+        <div v-if="post.imgUrl" class="col-12 text-center p-2">
+            <img  :src="post.imgUrl" class="postImg border border-1 rounded" :class="{'border-success': post.creator.graduated, 'border-secondary': !post.creator.graduated}">
+        </div>
+        <p class="col-12 text-center fs-2">
           {{ post.body }}  
         </p>
-        <div>
-            <button
-                @click="likePost()"
-                class="btn btn-outline-primary m-1">
-                <i class="mdi text-primary fs-2" :class="{"mdi-heart": post.likeIds.includes(account.id),"mdi-heart-outline": !post.likeIds.includes(account.id)}"></i>
-            </button>
-            <button 
-                v-if="post.creatorID == account.id"
-                @click="deletePost(post.id)"
-                class="btn btn-outline-danger m-1">
-                <i class="mdi mdi-delete text-danger fs-2"></i>
-            </button>
-            <button 
-                v-if="post.creatorID == account.id" 
-                @click="" 
-                data-bs-toggle="modal" :data-bs-target="`#edit-car-modal-${post.id}`"
-                class="btn btn-outline-success m-1">
-                <i class="mdi mdi-pen text-success fs-2"></i>
-            </button>
+
+        <div class="d-flex justify-content-between border-top border-2 col-12 p-2" 
+            :class="{'border-success': post.creator.graduated, 'border-secondary': !post.creator.graduated}">
+            <div class="d-flex align-items-center">
+                <ProfileIcon v-if="post.creator" :profile="post.creator"/>
+                <button 
+                    v-if="post.creatorID == account.id"
+                    @click="deletePost(post.id)"
+                    class="btn btn-outline-danger m-1">
+                    <i class="mdi mdi-delete text-danger fs-2"></i>
+                </button>
+                <button 
+                    v-if="post.creatorID == account.id" 
+                    @click="editPost()" 
+                    data-bs-toggle="modal" :data-bs-target="`#edit-car-modal-${post.id}`"
+                    class="btn btn-outline-warning m-1">
+                    <i class="mdi mdi-pen text-warning fs-2"></i>
+                </button>
+                <span v-else class="fs-4 ms-1" :class="{'text-success': post.creator.graduated, 'text-secondary': !post.creator.graduated}">{{post.creator.name}}</span>
+                    
+            </div>
+
+            <div class="d-flex align-items-center">
+            <span class="text-info fs-2" v-if="post.likeIds.length">Likes: {{ post.likeIds.length}}</span>
+                <button
+                    @click="likePost(post.id)"
+                    class="btn btn-outline-info m-2">
+                    <i class="mdi text-info fs-2" 
+                    :class="{
+                        'mdi-heart': post.likeIds.includes(account.id),
+                        'mdi-heart-outline': !post.likeIds.includes(account.id)}">
+                    </i>
+                </button>
+            </div>
+
         </div>
-
-
     </div>
 
     <ModalWrapper :modalId="`edit-post-modal-${post.id}`">
         <div>Edit Post</div>
-        <!-- <Poster :post="post"/> -->
+        <Poster :post="post"/>
     </ModalWrapper>
 </template>
 
@@ -42,6 +59,7 @@ import Pop from '../utils/Pop';
 import { postService } from '../services/PostService';
 import { Account } from '../models/Account';
 import ModalWrapper from '../components/ModalSM.vue'
+import ProfileIcon from './ProfileIcon.vue';
 export default {
     props: {
         post: { type: Post, required: true }
@@ -56,16 +74,34 @@ export default {
                     postService.deletePost(id)
                } 
             } catch (error) {
-                
+                Pop.error(error)
             }
-        } 
+        },
+        async likePost(id){
+            try{
+                postService.likePost(id)
+            }
+            catch(error){
+                Pop.error(error)
+            }
+        },
      }
     },
-    components: { ModalWrapper }
+    components: { ModalWrapper, ProfileIcon }
 };
 </script>
 
 
 <style lang="scss" scoped>
+    .postImg{
+        height: 50vh;
+        max-width: 95%;
+        object-fit: cover;
+        object-position: center;
+    }
+    .bg-card{
+        box-shadow:0,0,5px,black;
+        min-height: 50vh;
+    }
 
 </style>

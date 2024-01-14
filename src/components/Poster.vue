@@ -1,8 +1,11 @@
 <template>
-    <form @submit.prevent="makePost()">
-        <textarea v-model="postData.body" minlength="1" maxlength="5000" rows="10" name="post-body" id="post-body" type="text"/>
-        <button type="submit">Submit</button>
-    </form>
+    <div class="mt-5">
+        <form @submit.prevent="makePost()" class="mt-5">
+            <textarea v-model="postData.body" minlength="1" maxlength="5000" rows="10" name="post-body" id="post-body" type="text"/>
+            <input v-model="postData.imgUrl" type="text">
+            <button type="submit">Submit</button>
+        </form>
+    </div>
 </template>
 
 
@@ -19,7 +22,7 @@ export default {
         post: { type: Post }
     },
     setup(props){
-        const postData = ref({});
+        let postData = ref({});
         watch(
             props,
             ()=>{setData()},

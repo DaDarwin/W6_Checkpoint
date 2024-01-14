@@ -1,12 +1,13 @@
+import { Profile } from "./Profile"
+
 export class Post{
     constructor(data){
         this.id = data._id
         this.body = data.body,
-        this.imhUrl = data.imgUrl,
+        this.imgUrl = data.imgUrl,
         this.creatorID = data.creatorID || data.creator._id
-        this.likeIds = data.likeIds
-        
-    
+        this.creator = new Profile(data.creator)
+        this.likeIds = data.likeIds        
     }
 }
 // {
