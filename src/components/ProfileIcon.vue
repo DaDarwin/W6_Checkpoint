@@ -1,7 +1,11 @@
 <template>
-    <router-link @click="window.scrollTo(0,0, {behavior: smooth})" :to="{ name: 'Profile', params: { profileId: profile.id } }">
-          <img :title="`Go to ${profile.name}'s Profile`" :src="profile.picture" :alt="profile.name">
+
+    <router-link :to="{ name: 'Profile', params: { profileId: profile.id } }">
+
+        <img :title="`Go to ${profile.name}'s Profile`" :src="profile.picture" :alt="profile.name">
+
     </router-link>
+
 </template>
 
 
@@ -18,9 +22,6 @@ export default {
     setup(){
         
         return {
-            scrollToTop(){
-                
-            }
         }
     },
     components: { RouterLink }

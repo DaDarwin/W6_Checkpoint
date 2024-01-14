@@ -1,28 +1,71 @@
 <template>
     <section class="container-fluid">
 
-        <header class="row justify-content-center" :class="{'border-success': profile.graduated,'border-secondary': !profile.graduated}">
+        <header class="row justify-content-center" 
+            :class="{
+                'border-success': profile.graduated,
+                'border-secondary': !profile.graduated
+            }"
+        >
 
             <div class="col-10 position-relative">
 
-                <img :src="profile.coverImg" alt="" class="coverImg p-0 w-100 border" :class="{'border-3': profile.graduated,}">
+                <img :src="profile.coverImg" alt="" 
+                    class="coverImg p-0 w-100 border" 
+                    :class="{'border-3': profile.graduated,}"
+                >
 
-                    <span class="d-flex align-items-center p-0 position-absolute border rounded-pill bg-page profile-icon" :class="{'border-3': profile.graduated,}">
+                    <span class="d-flex align-items-center p-0 position-absolute border rounded-pill bg-page profile-icon" 
+                        :class="{'border-3': profile.graduated,}"
+                    >
 
-                    <img :src="profile.picture" alt="" class="profilePic p-0">
+                    <img :src="profile.picture" 
+                        alt="" 
+                        class="profilePic p-0"
+                    >
 
-                    <div v-if="profile.github || profile.linkedin || profile.resume" class="d-flex flex-column me-4">
+                    <div v-if="profile.github || profile.linkedin || profile.resume" 
+                        class="d-flex flex-column me-4"
+                    >
 
-                        <a v-if="profile.github" :href="profile.github" :title="`Go to ${profile.name}'s Github'`" target="_blank">
-                            <i class="mdi mdi-github fs-2 me-2" :class="{'text-success': profile.graduated, 'text-secondary': !profile.graduated}">Github</i>
+                        <a v-if="profile.github" 
+                            :href="profile.github" 
+                            :title="`Go to ${profile.name}'s Github'`" 
+                            target="_blank"
+                        >
+
+                            <i class="mdi mdi-github fs-2 me-2" 
+                                :class="{
+                                    'text-success': profile.graduated, 
+                                    'text-secondary': !profile.graduated
+                                }"
+                            >Github</i>
+
                         </a>
 
-                        <a v-if="profile.linkedin" :to="profile.linkedin" :title="`Go to ${profile.name}'s LinkedIn'`" target="_blank" class="ms-2">
-                            <i class="mdi mdi-linkedin fs-2 ms-2" :class="{'text-success': profile.graduated, 'text-secondary': !profile.graduated}">LinkedIn</i>
+                        <a v-if="profile.linkedin" 
+                            :href="profile.linkedin" 
+                            :title="`Go to ${profile.name}'s LinkedIn'`" 
+                            target="_blank" class="ms-2"
+                        >
+
+                            <i class="mdi mdi-linkedin fs-2 ms-2" 
+                                :class="{
+                                    'text-success': profile.graduated, 
+                                    'text-secondary': !profile.graduated
+                                }">LinkedIn</i>
+
                         </a>
 
-                        <a v-if="profile.resume" :to="profile.resume" title="View Resume" target="_blank">
-                            <i class="mdi mdi-account fs-2 me-2" :class="{'text-success': profile.graduated, 'text-secondary': !profile.graduated}">Resume</i>
+                        <a v-if="profile.resume" 
+                            :href="profile.resume" 
+                            title="View Resume" 
+                            target="_blank"
+                        >
+
+                            <i class="mdi mdi-account fs-2 me-2" 
+                            :class="{'text-success': profile.graduated, 'text-secondary': !profile.graduated}">Resume</i>
+
                         </a>
                         
                     </div>
@@ -34,12 +77,24 @@
 
         <body class="row justify-content-center">
 
+            <p>{{profile.class}}</p>
+
             <p class="text-primary col-10">{{profile.bio}}</p>
 
             <section class="col-6 justify-content-center mt-5 me-5">
+
                 <div v-for="post in posts" class="mt-5">
-                  <PostCard v-if="profile.id == post.creatorID" :post="post"/>
+
+                  <PostCard v-if="profile.id == post.creatorID || Object.hasOwn(post, 'banner')" :post="post"/>
+
                 </div>
+
+                <div v-for="post in profilePosts">
+
+                    <PostCard v-if="!posts.includes(post)"/>
+                        
+                </div>
+
             </section>
 
         </body>
@@ -60,7 +115,7 @@ export default {
         const route = useRoute()
         const routeProfile = computed(() => route.params.profileId)
 
-        function scolltoTop(){
+        function scrollToTop(){
             window.scrollTo({top:0, left:0, behavior: 'instant'})
         }
 
@@ -86,9 +141,9 @@ export default {
             () => {
                 logger.log('watch', routeProfile)
                 postService.clearPosts()
-                scolltoTop()
+                scrollToTop()
                 profileService.clearProfile()
-                /**@ts-ingore*/
+                /**@ts-ignore*/
                 findProfile()
                 getProfilePosts()
                 

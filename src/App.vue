@@ -13,10 +13,21 @@
 <script>
 import { computed } from 'vue'
 import { AppState } from './AppState'
+import { postService } from './services/PostService'
 import Navbar from './components/Navbar.vue'
 
 export default {
   setup() {
+    getPosts()
+
+    async function getPosts(){
+      try {
+        await postService.getPosts()  
+      } 
+      catch (error) {
+        Pop.error(error)
+      }
+    }
     return {
       appState: computed(() => AppState)
       

@@ -1,9 +1,9 @@
 <template>
     <div class="mt-5">
-        <form @submit.prevent="makePost()" class="mt-5">
-            <textarea v-model="postData.body" minlength="1" maxlength="5000" rows="10" name="post-body" id="post-body" type="text"/>
-            <input v-model="postData.imgUrl" type="text">
-            <button type="submit">Submit</button>
+        <form @submit.prevent="makePost()" class="mt-5 row">
+            <textarea v-model="postData.body" minlength="1" maxlength="5000" rows="10" name="post-body" id="post-body" type="text" class="col-12"/>
+            <input v-model="postData.imgUrl" type="text" class="col-12 my-1">
+            <button type="submit" class="col-12">Submit</button>
         </form>
     </div>
 </template>
