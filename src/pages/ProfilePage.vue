@@ -81,6 +81,12 @@
 
             <p class="text-primary col-10">{{profile.bio}}</p>
 
+            <button @click="loadNewPosts" role="button" class="btn btn-outline-secondary w-100 mt-5">
+
+                <i class="mdi mdi-refresh"></i>
+
+            </button>
+
             <section class="col-6 justify-content-center mt-5 me-5">
 
                 <div v-for="post in posts" class="mt-5">
@@ -94,6 +100,12 @@
                     <PostCard v-if="!posts.includes(post)"/>
                         
                 </div>
+
+                <button :class="{':disabled': !loadTimedOut, ':enabled':loadTimedOut}" @click="addPosts" role="button" class="btn btn-outline-secondary w-100 mt-5">
+        
+                    <i class="mdi mdi-floppy"></i>
+      
+                </button>
 
             </section>
 
@@ -110,6 +122,7 @@ import { profileService } from '../services/ProfileService.js'
 import { postService } from '../services/PostService.js'
 import Pop from '../utils/Pop';
 import { AppState } from '../AppState';
+
 export default {
     setup() {
         const route = useRoute()
@@ -136,6 +149,24 @@ export default {
                 Pop.error(error)
             }
         }
+
+        async function loadNewPostsSub(){//The sub-function
+            try{
+                return await postService.loadNewPosts()
+            }
+            catch(error){
+                Pop.error(error)
+            }
+        }
+
+        async function addPostsSub(){
+            try {
+                await postService.addPosts()
+            } 
+            catch (error) {
+                Pop.error(error)
+            }
+        }
         watch(
             routeProfile,
             () => {
@@ -152,9 +183,33 @@ export default {
             )
             return {
                 profile: computed(()=> AppState.profile),
-                posts: computed(()=> AppState.posts)
-                
-                
+                posts: computed(()=> AppState.posts),
+                loadTimedOut: computed(()=> AppState.loadTimedOut),
+
+                loadNewPosts: ()=>{//This entire function and sub-function is bad but I'm going to die on this hill sadly, also i copy & pasted this yes
+        
+                    logger.log('Timeout off', AppState.loadTimedOut)
+                    
+                    if(AppState.loadTimedOut){
+                        
+                        const addedPosts = loadNewPostsSub()
+                        
+                        if(addedPosts > 0){Pop.toast(`Added ${addedPosts} Posts`)}
+                        
+                        else{Pop.toast('No New Posts')}
+                    }
+                    else{
+                        Pop.toast('Request Underway')
+                    } 
+                },
+      
+                addPosts: ()=>{//better but *sigh*
+                    if(AppState.loadTimedOut) addPostsSub()
+                    else Pop.toast('Request Underway')
+                },
+                profilePosts: computed(()=> AppState.profilePosts)
+                            
+                            
             }
         }
     }

@@ -19,7 +19,11 @@
 
         </div>
 
-        <p class="col-12 text-center fs-2"> {{ post.body }} </p>
+        <p class="col-12 text-center fs-2" 
+            :class="{
+                        'text-success': post.creator.graduated, 
+                        'text-secondary': !post.creator.graduated}"
+        > {{ post.body }} </p>
 
         <div class="d-flex justify-content-between border-top border-2 col-12 p-2" 
             :class="{

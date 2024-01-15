@@ -82,7 +82,7 @@ export default {
       posts: computed(()=> AppState.posts),
       loadTimedOut: computed(()=> AppState.loadTimedOut),
       
-      loadNewPosts: ()=>{//This entire function and sub-function is bad but I'm going to die on this hill
+      loadNewPosts: ()=>{//This entire function and sub-function is bad but I'm going to die on this hill sadly
         
         logger.log('Timeout off', AppState.loadTimedOut)
           
@@ -100,7 +100,7 @@ export default {
       },
       
       addPosts: ()=>{//better but *sigh*
-          if(loadTimeOut) addPostsSub()
+          if(AppState.loadTimedOut) addPostsSub()
           else Pop.toast('Request Underway')
       },
 

@@ -33,9 +33,12 @@ export const AppState = reactive({
       likeIds: []
     })
     ],
+
   /**@type {import('./models/Profile.js').Profile)} */
   profile:{},
+
   page: 1,
+  
   /**@type {import('./models/Post.js').Post[]} */
   profilePosts:[],
 
