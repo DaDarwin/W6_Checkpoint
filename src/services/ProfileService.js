@@ -6,6 +6,7 @@ import { api } from "./AxiosService"
 
 class ProfileService{
     async findProfile(id){
+        AppState.profile = {}
         if(id){
             const res = await api.get(`api/profiles/${id}`)
             const profile = new Profile(res.data)
@@ -15,7 +16,6 @@ class ProfileService{
     }
 
     clearProfile(){
-        AppState.profile = {}
     }
     
     

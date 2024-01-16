@@ -77,9 +77,9 @@
 
         <body class="row justify-content-center">
 
-            <p>{{profile.class}}</p>
+            <p class="text-secondary col-10 fs-3">{{profile.class}}</p>
 
-            <p class="text-primary col-10">{{profile.bio}}</p>
+            <p class="text-secondary col-10">{{profile.bio}}</p>
 
             <!-- <button @click="loadNewPosts" role="button" class="btn btn-outline-secondary w-100 mt-5">
 
