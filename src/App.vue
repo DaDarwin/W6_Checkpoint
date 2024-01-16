@@ -18,16 +18,7 @@ import Navbar from './components/Navbar.vue'
 
 export default {
   setup() {
-    getPosts()
-
-    async function getPosts(){
-      try {
-        await postService.getPosts()  
-      } 
-      catch (error) {
-        Pop.error(error)
-      }
-    }
+    
     return {
       appState: computed(() => AppState)
       
@@ -41,6 +32,10 @@ export default {
 
 :root{
   --main-height: calc(100vh - 32px - 64px);
+}
+
+main{
+  margin-top: 64px;
 }
 
 

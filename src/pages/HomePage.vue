@@ -2,9 +2,9 @@
 
   <body class="row justify-content-end">
 
-    <section class="col-4 fixed-top mt-5 ms-5">
-
-      <form @submit.prevent="search()">
+    <section class="col-4 fixed-top ms-5 user-forms">
+      
+      <form @submit.prevent="search()" class="mt-2">
         <input v-model="searchQuery.query" id="search" type="text">
         <button>Submit</button>
       </form>
@@ -13,25 +13,60 @@
 
     </section>
 
-    <section class="col-6 justify-content-center mt-5 me-5">
+    <section class="col-6 justify-content-center mt-2 me-5">
 
-      <button @click="loadNewPosts" role="button" class="btn btn-outline-secondary w-100 mt-5">
+      <div class="d-flex justify-content-evenly fs-2">
+
+        <button v-if="page <= 1" @click="switchPage(page)" class="btn btn-outline-info px-3">
+          <i class="mdi mdi-refresh text-info"></i>
+        </button>
+
+        <button v-if="page > 1" @click="switchPage(page - 1)" class="btn btn-outline-info px-3">
+          <i class="mdi mdi-arrow-left text-info"></i>
+        </button>
+
+        <span class="text-info">Page: {{ page }} of {{ totalPages }}<i class="mdi mdi-file"></i></span>
+
+        <button @click="switchPage(page + 1)" class="btn px-3" :class="{'disabled': page == totalPages, 'btn-outline-secondary': page == totalPages, 'btn-outline-info': page != totalPages}">
+          <i class="mdi mdi-arrow-right" :class="{'text-secondary': page == totalPages, 'text-info': page != totalPages}"></i>
+        </button>
+
+      </div>
+
+      <!-- <button @click="loadNewPosts" role="button" class="btn btn-outline-secondary w-100 mt-5">
 
         <i class="mdi mdi-refresh"></i>
 
-      </button>
+      </button> -->
 
-      <div v-for="post in posts" class="mt-2">
+      <div v-for="post in posts1">
 
         <PostCard :post="post"/>
 
       </div>
 
-      <button :class="{':disabled': !loadTimedOut, ':enabled':loadTimedOut}" @click="addPosts" role="button" class="btn btn-outline-secondary w-100 mt-5">
+      <AdCard v-if="ads[0]" :ad="ads[0]"/>
+
+      <div v-for="post in posts2">
+
+        <PostCard :post="post"/>
+
+      </div>
+
+      <AdCard v-if="posts2.length && ads[1]" :ad="ads[1]"/>
+
+      <div v-for="post in posts3">
+
+        <PostCard :post="post"/>
+
+      </div>
+
+
+      <!-- <button :class="{':disabled': !loadTimedOut, ':enabled':loadTimedOut}" @click="addPosts" role="button" class="btn btn-outline-secondary w-100 mt-5">
         
         <i class="mdi mdi-floppy"></i>
       
-      </button>
+      </button> -->
 
     </section>
 
@@ -40,81 +75,133 @@
 
 <script>
 import { computed, onMounted, ref } from 'vue';
-import Pop from '../utils/Pop';
-import { postService } from '../services/PostService.js'
-import { AppState } from '../AppState.js'
+import { useRoute } from 'vue-router';
 import  PostCard  from '../components/PostCard.vue'
+import AdCard from '../components/AdCard.vue';
 import Poster from '../components/Poster.vue'
+import { postService } from '../services/PostService.js'
+import { adService } from '../services/AdService.js'
+import { AppState } from '../AppState.js'
+import Pop from '../utils/Pop';
 import { logger } from '../utils/Logger.js'
+
 export default {
   setup() {
-    let searchQuery = ref({});
+    let route = useRoute()
+    let searchQuery = ref({})
     onMounted(()=> {
+      getPosts(1, null)
+      getAds()
       scrollToTop()
     })
 
-    function scrollToTop(){
-      window.scrollTo({top:0, left:0, behavior: 'instant'})
-    }
-
-    async function loadNewPostsSub(){//The sub-function
-      try{
-        return await postService.loadNewPosts()
-      }
-      
-      catch(error){
-        Pop.error(error)
-      }
-    }
-
-    async function addPostsSub(){
+    async function getPosts(page, query){
       try {
-        await postService.addPosts()
+        let url = `api/posts?page=${page}`
+        if(searchQuery.value.query){
+            url = `api/posts?query=${query}&page=${page}`
+        }
+        await postService.getPosts(url)  
       } 
       catch (error) {
         Pop.error(error)
       }
     }
 
+    async function getAds(){
+      try {
+        await adService.getAds()  
+      } 
+      catch (error) {
+        Pop.error(error)
+      }
+    }
+
+    function scrollToTop(){
+      window.scrollTo({top:0, left:0, behavior: 'instant'})
+    }
+
+    // async function loadNewPostsSub(){//The sub-function
+    //   try{
+    //     return await postService.loadNewPosts()
+    //   }
+      
+    //   catch(error){
+    //     Pop.error(error)
+    //   }
+    // }
+
+    // async function addPostsSub(){
+    //   try {
+    //     await postService.addPosts()
+    //   } 
+    //   catch (error) {
+    //     Pop.error(error)
+    //   }
+    // }
+
     
     return {
       searchQuery,
-      posts: computed(()=> AppState.posts),
-      loadTimedOut: computed(()=> AppState.loadTimedOut),
+      posts1: computed(()=> AppState.posts.slice(0, 5)),
+      posts2: computed(()=> AppState.posts.slice(5, 15)),
+      posts3: computed(()=> AppState.posts.slice(15)),
+      ads: computed(()=> AppState.ads),
+      page: computed(()=> AppState.page),
+      totalPages: computed(()=> AppState.totalPages),
+      // loadTimedOut: computed(()=> AppState.loadTimedOut),
       
-      loadNewPosts: ()=>{//This entire function and sub-function is bad but I'm going to die on this hill sadly
+      // loadNewPosts: ()=>{//This entire function and sub-function is bad but I'm going to die on this hill sadly
         
-        logger.log('Timeout off', AppState.loadTimedOut)
+      //   logger.log('Timeout off', AppState.loadTimedOut)
           
-          if(AppState.loadTimedOut){
+      //     if(AppState.loadTimedOut){
             
-            const addedPosts = loadNewPostsSub()
+      //       const addedPosts = loadNewPostsSub()
             
-            if(addedPosts > 0){Pop.toast(`Added ${addedPosts} Posts`)}
+      //       if(addedPosts > 0){Pop.toast(`Added ${addedPosts} Posts`)}
             
-            else{Pop.toast('No New Posts')}
+      //       else{Pop.toast('No New Posts')}
+      //     }
+      //     else{
+      //       Pop.toast('Request Underway')
+      //     } 
+      // },
+      
+      // addPosts: ()=>{//better but *sigh*
+      //     if(AppState.loadTimedOut) addPostsSub()
+      //     else Pop.toast('Request Underway')
+      // },
+
+      // async search(){
+      //   try{
+      //     await postService.search(searchQuery.value.query)
+      //     searchQuery.value.query = ''
+      //   }
+      //   catch(error){
+      //     Pop.error(error)
+      //   }
+      // },
+
+      switchPage(page){
+          if(searchQuery.value.query){
+            // logger.log(page, searchQuery.value.query)
+            getPosts(page, searchQuery.value.query)
+            getAds()
           }
           else{
-            Pop.toast('Request Underway')
-          } 
-      },
-      
-      addPosts: ()=>{//better but *sigh*
-          if(AppState.loadTimedOut) addPostsSub()
-          else Pop.toast('Request Underway')
+            // logger.log(page)
+            getPosts(page, null)
+            getAds()
+          }  
       },
 
-      async search(){
-        try{
-          await postService.search(searchQuery.value.query)
-        }
-        catch(error){
-          Pop.error(error)
-        }
+      search(){
+        getPosts(1, searchQuery.value.query)
       }
     }
   },
-  components: {Poster, PostCard}
+  components: {Poster, PostCard, AdCard}
 }
 
 </script>
@@ -138,5 +225,9 @@ export default {
       object-position: center;
     }
   }
+
+}
+.user-forms{
+  margin-top: 64px;
 }
 </style>

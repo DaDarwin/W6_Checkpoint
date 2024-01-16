@@ -45,7 +45,10 @@ export default {
         theme.value = theme.value == 'light' ? 'dark' : 'light';
         document.documentElement.setAttribute('data-bs-theme', theme.value);
         saveState('theme', theme.value);
-      }
+      },
+      // async refresh(){
+      //   setTimeout(location.reload(), 1000)
+      // }
     }
   },
   components: { Login }

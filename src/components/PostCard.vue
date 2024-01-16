@@ -1,6 +1,6 @@
 <template>
 
-    <div v-if="Object.hasOwn(post, 'creator')" class="row justify-content-between border border-2 rounded m-2 bg-card" 
+    <div class="row justify-content-between border border-2 rounded m-2 p-2 bg-card" 
         :class="{
             'border-success': post.creator.graduated,
             'bg-dark': post.creator.graduated, 
@@ -68,7 +68,7 @@
 
             <span class="text-info fs-2" v-if="post.likeIds.length">Likes: {{ post.likeIds.length}}</span>
 
-                <button
+                <button v-if="account.id"
                     @click="likePost(post.id)"
                     class="btn btn-outline-info m-2">
                     <i class="mdi text-info fs-2" 
@@ -93,10 +93,10 @@
 
     </ModalWrapper>
 
-    <div v-if="Object.hasOwn(post, 'banner')">
+    <!-- <div v-if="Object.hasOwn(post, 'banner')"> -->
         <!-- {{post.title}} -->
-        <img :src="post.square" :alt="post.title">
-    </div>
+        <!-- <img :src="post.square" :alt="post.title"> -->
+    <!-- </div> -->
 </template>
 
 
@@ -112,7 +112,7 @@ import ProfileIcon from './ProfileIcon.vue';
 import Poster from './Poster.vue'
 export default {
     props: {
-        post: { type: Post || Ad, required: true }
+        post: { type: Post, required: true }
     },
     setup(){
     return {
