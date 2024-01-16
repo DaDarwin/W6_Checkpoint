@@ -6,9 +6,12 @@ import { api } from "./AxiosService"
 
 class ProfileService{
     async findProfile(id){
-        const res = await api.get(`api/profiles/${id}`)
-        // logger.log('response',res)
-        AppState.profile = new Profile(res.data)
+        if(id){
+            const res = await api.get(`api/profiles/${id}`)
+            const profile = new Profile(res.data)
+            logger.log('Profile', profile)
+            AppState.profile = profile
+        }
     }
 
     clearProfile(){

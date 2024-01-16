@@ -1,5 +1,5 @@
 <template>
-    <section class="container-fluid">
+    <section v-if="profile.id" class="container-fluid">
 
         <header class="row justify-content-center" 
             :class="{
@@ -81,31 +81,34 @@
 
             <p class="text-primary col-10">{{profile.bio}}</p>
 
-            <button @click="loadNewPosts" role="button" class="btn btn-outline-secondary w-100 mt-5">
+            <!-- <button @click="loadNewPosts" role="button" class="btn btn-outline-secondary w-100 mt-5">
 
                 <i class="mdi mdi-refresh"></i>
 
-            </button>
+            </button> -->
 
             <section class="col-6 justify-content-center mt-5 me-5">
 
+                <PageTurner :profile="profile"/>
+
                 <div v-for="post in posts" class="mt-5">
 
-                  <PostCard v-if="profile.id == post.creatorID || Object.hasOwn(post, 'banner')" :post="post"/>
+                  <!-- <PostCard v-if="profile.id == post.creatorID || Object.hasOwn(post, 'banner')" :post="post"/> -->
+                  <PostCard :post="post"/>
 
                 </div>
 
-                <div v-for="post in profilePosts">
+                <!-- <div v-for="post in profilePosts">
 
                     <PostCard v-if="!posts.includes(post)"/>
                         
-                </div>
+                </div> -->
 
-                <button :class="{':disabled': !loadTimedOut, ':enabled':loadTimedOut}" @click="addPosts" role="button" class="btn btn-outline-secondary w-100 mt-5">
+                <!-- <button :class="{':disabled': !loadTimedOut, ':enabled':loadTimedOut}" @click="addPosts" role="button" class="btn btn-outline-secondary w-100 mt-5">
         
                     <i class="mdi mdi-floppy"></i>
       
-                </button>
+                </button> -->
 
             </section>
 
@@ -119,8 +122,9 @@ import { computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { logger } from '../utils/Logger.js';
 import { profileService } from '../services/ProfileService.js'
-import { postService } from '../services/PostService.js'
+// import { postService } from '../services/PostService.js'
 import Pop from '../utils/Pop';
+import PageTurner from '../components/PageTurner.vue';
 import { AppState } from '../AppState';
 
 export default {
@@ -141,73 +145,74 @@ export default {
             }
         }
 
-        async function getProfilePosts(){
-            try{
-                await postService.getProfilePosts(route.params.profileId)
-            }
-            catch(error){
-                Pop.error(error)
-            }
-        }
+        // async function getProfilePosts(){
+        //     try{
+        //         postService.clearPosts()
+        //         await postService.getPosts(`api/profiles/${route.params.profileId}/posts`)
+        //     }
+        //     catch(error){
+        //         Pop.error(error)
+        //     }
+        // }
 
-        async function loadNewPostsSub(){//The sub-function
-            try{
-                return await postService.loadNewPosts()
-            }
-            catch(error){
-                Pop.error(error)
-            }
-        }
+        // async function loadNewPostsSub(){//The sub-function
+        //     try{
+        //         return await postService.loadNewPosts()
+        //     }
+        //     catch(error){
+        //         Pop.error(error)
+        //     }
+        // }
 
-        async function addPostsSub(){
-            try {
-                await postService.addPosts()
-            } 
-            catch (error) {
-                Pop.error(error)
-            }
-        }
+        // async function addPostsSub(){
+        //     try {
+        //         await postService.addPosts()
+        //     } 
+        //     catch (error) {
+        //         Pop.error(error)
+        //     }
+        // }
         watch(
             routeProfile,
             () => {
-                logger.log('watch', routeProfile)
-                postService.clearPosts()
                 scrollToTop()
-                profileService.clearProfile()
-                /**@ts-ignore*/
                 findProfile()
-                getProfilePosts()
+                // logger.log('watch', routeProfile)
+                // postService.clearPosts()
+                // profileService.clearProfile()
+                /**@ts-ignore*/
+                // getProfilePosts()
                 
             },
-            { immediate: true }
+            {immediate: true}
             )
             return {
                 profile: computed(()=> AppState.profile),
                 posts: computed(()=> AppState.posts),
                 loadTimedOut: computed(()=> AppState.loadTimedOut),
 
-                loadNewPosts: ()=>{//This entire function and sub-function is bad but I'm going to die on this hill sadly, also i copy & pasted this yes
+                // loadNewPosts: ()=>{//This entire function and sub-function is bad but I'm going to die on this hill sadly, also i copy & pasted this yes
         
-                    logger.log('Timeout off', AppState.loadTimedOut)
+                //     logger.log('Timeout off', AppState.loadTimedOut)
                     
-                    if(AppState.loadTimedOut){
+                //     if(AppState.loadTimedOut){
                         
-                        const addedPosts = loadNewPostsSub()
+                //         const addedPosts = loadNewPostsSub()
                         
-                        if(addedPosts > 0){Pop.toast(`Added ${addedPosts} Posts`)}
+                //         if(addedPosts > 0){Pop.toast(`Added ${addedPosts} Posts`)}
                         
-                        else{Pop.toast('No New Posts')}
-                    }
-                    else{
-                        Pop.toast('Request Underway')
-                    } 
-                },
+                //         else{Pop.toast('No New Posts')}
+                //     }
+                //     else{
+                //         Pop.toast('Request Underway')
+                //     } 
+                // },
       
-                addPosts: ()=>{//better but *sigh*
-                    if(AppState.loadTimedOut) addPostsSub()
-                    else Pop.toast('Request Underway')
-                },
-                profilePosts: computed(()=> AppState.profilePosts)
+                // addPosts: ()=>{//better but *sigh*
+                //     if(AppState.loadTimedOut) addPostsSub()
+                //     else Pop.toast('Request Underway')
+                // },
+                // profilePosts: computed(()=> AppState.profilePosts)
                             
                             
             }

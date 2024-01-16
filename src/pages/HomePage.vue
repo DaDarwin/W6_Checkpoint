@@ -4,10 +4,7 @@
 
     <section class="col-4 fixed-top ms-5 user-forms">
       
-      <form @submit.prevent="search()" class="mt-2">
-        <input v-model="searchQuery.query" id="search" type="text">
-        <button>Submit</button>
-      </form>
+      <SearchBar/>
 
       <Poster class="w-25"/>
 
@@ -15,7 +12,9 @@
 
     <section class="col-6 justify-content-center mt-2 me-5">
 
-      <div class="d-flex justify-content-evenly fs-2">
+      <PageTurner/>
+
+      <!-- <div class="d-flex justify-content-evenly fs-2">//NOTE moved to component
 
         <button v-if="page <= 1" @click="switchPage(page)" class="btn btn-outline-info px-3">
           <i class="mdi mdi-refresh text-info"></i>
@@ -31,7 +30,7 @@
           <i class="mdi mdi-arrow-right" :class="{'text-secondary': page == totalPages, 'text-info': page != totalPages}"></i>
         </button>
 
-      </div>
+      </div> -->
 
       <!-- <button @click="loadNewPosts" role="button" class="btn btn-outline-secondary w-100 mt-5">
 
@@ -79,43 +78,43 @@ import { useRoute } from 'vue-router';
 import  PostCard  from '../components/PostCard.vue'
 import AdCard from '../components/AdCard.vue';
 import Poster from '../components/Poster.vue'
-import { postService } from '../services/PostService.js'
-import { adService } from '../services/AdService.js'
+import PageTurner from '../components/PageTurner.vue';
+import SearchBar from '../components/SearchBar.vue';
+// import { postService } from '../services/PostService.js'
+// import { adService } from '../services/AdService.js'
 import { AppState } from '../AppState.js'
-import Pop from '../utils/Pop';
-import { logger } from '../utils/Logger.js'
+// import Pop from '../utils/Pop';
+// import { logger } from '../utils/Logger.js'
 
 export default {
   setup() {
-    let route = useRoute()
-    let searchQuery = ref({})
     onMounted(()=> {
-      getPosts(1, null)
-      getAds()
+      // getPosts(1, null)
+      // getAds()
       scrollToTop()
     })
 
-    async function getPosts(page, query){
-      try {
-        let url = `api/posts?page=${page}`
-        if(searchQuery.value.query){
-            url = `api/posts?query=${query}&page=${page}`
-        }
-        await postService.getPosts(url)  
-      } 
-      catch (error) {
-        Pop.error(error)
-      }
-    }
+    // async function getPosts(page, query){
+    //   try {
+    //     let url = `api/posts?page=${page}`
+    //     if(searchQuery.value.query){
+    //         url = `api/posts?query=${query}&page=${page}`
+    //     }
+    //     await postService.getPosts(url)  
+    //   } 
+    //   catch (error) {
+    //     Pop.error(error)
+    //   }
+    // }
 
-    async function getAds(){
-      try {
-        await adService.getAds()  
-      } 
-      catch (error) {
-        Pop.error(error)
-      }
-    }
+    // async function getAds(){
+    //   try {
+    //     await adService.getAds()  
+    //   } 
+    //   catch (error) {
+    //     Pop.error(error)
+    //   }
+    // }
 
     function scrollToTop(){
       window.scrollTo({top:0, left:0, behavior: 'instant'})
@@ -139,16 +138,14 @@ export default {
     //     Pop.error(error)
     //   }
     // }
-
     
     return {
-      searchQuery,
       posts1: computed(()=> AppState.posts.slice(0, 5)),
       posts2: computed(()=> AppState.posts.slice(5, 15)),
       posts3: computed(()=> AppState.posts.slice(15)),
       ads: computed(()=> AppState.ads),
-      page: computed(()=> AppState.page),
-      totalPages: computed(()=> AppState.totalPages),
+      // page: computed(()=> AppState.page),
+      // totalPages: computed(()=> AppState.totalPages),
       // loadTimedOut: computed(()=> AppState.loadTimedOut),
       
       // loadNewPosts: ()=>{//This entire function and sub-function is bad but I'm going to die on this hill sadly
@@ -183,25 +180,25 @@ export default {
       //   }
       // },
 
-      switchPage(page){
-          if(searchQuery.value.query){
-            // logger.log(page, searchQuery.value.query)
-            getPosts(page, searchQuery.value.query)
-            getAds()
-          }
-          else{
-            // logger.log(page)
-            getPosts(page, null)
-            getAds()
-          }  
-      },
+      // switchPage(page){ //NOTE moved to component
+      //     if(searchQuery.value.query){
+      //       // logger.log(page, searchQuery.value.query)
+      //       getPosts(page, searchQuery.value.query)
+      //       getAds()
+      //     }
+      //     else{
+      //       // logger.log(page)
+      //       getPosts(page, null)
+      //       getAds()
+      //     }  
+      // },
 
-      search(){
-        getPosts(1, searchQuery.value.query)
-      }
+      // search(){
+      //   getPosts(1, searchQuery.value.query)
+      // }
     }
   },
-  components: {Poster, PostCard, AdCard}
+  components: {Poster, PostCard, AdCard, PageTurner, SearchBar}
 }
 
 </script>

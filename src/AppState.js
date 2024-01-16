@@ -2,7 +2,7 @@ import { reactive } from 'vue'
 
 export const AppState = reactive({
   user: {},
-  
+
   /** @type {import('./models/Account.js').Account} */
   account: {},
 
@@ -12,6 +12,8 @@ export const AppState = reactive({
   page:1,
 
   totalPages:1,
+
+  query:'',
 
   /**@type {import('./models/Profile.js').Profile)} */
   profile:{},
