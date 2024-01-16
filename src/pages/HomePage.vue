@@ -2,15 +2,24 @@
 
   <body class="row justify-content-end">
 
-    <section class="col-4 fixed-top ms-5 user-forms">
+    <section class="col-5 fixed-top ms-5 user-forms border border-secondary border-3 rounded p-1 d-flex justify-content-center flex-column">
       
-      <SearchBar/>
+      <SearchBar class=""/>
 
-      <Poster class="w-25"/>
+      <div v-if="account.id" class="mt-1 border border-secondary rounded border-2">
+        <div class="p-2 profile-bg text-center d-flex align-items-center" :style="`background-image: url(${account.coverImg});`">
+          <div class="bg-dark  rounded-pill d-flex justify-content-center align-items-center">
+            <ProfileIcon :profile="account" class="me-1 border border-secondary rounded-circle"/>
+            <span class="fs-2 text-light pb-1 pe-2">{{ account.name }}</span>  
+          </div>
+        </div>
+      </div>
+
+      <Poster class=""/>
 
     </section>
 
-    <section class="col-6 justify-content-center mt-2 me-5">
+    <section class="col-5 justify-content-center mt-2 me-5">
 
       <PageTurner/>
 
@@ -60,6 +69,9 @@
 
       </div>
 
+      <PageTurner class="mb-2"/>
+
+
 
       <!-- <button :class="{':disabled': !loadTimedOut, ':enabled':loadTimedOut}" @click="addPosts" role="button" class="btn btn-outline-secondary w-100 mt-5">
         
@@ -83,6 +95,8 @@ import SearchBar from '../components/SearchBar.vue';
 // import { postService } from '../services/PostService.js'
 // import { adService } from '../services/AdService.js'
 import { AppState } from '../AppState.js'
+import ProfileIcon from '../components/ProfileIcon.vue';
+import { Profile } from '../models/Profile';
 // import Pop from '../utils/Pop';
 // import { logger } from '../utils/Logger.js'
 
@@ -144,6 +158,7 @@ export default {
       posts2: computed(()=> AppState.posts.slice(5, 15)),
       posts3: computed(()=> AppState.posts.slice(15)),
       ads: computed(()=> AppState.ads),
+      account: computed(()=> new Profile(AppState.account))
       // page: computed(()=> AppState.page),
       // totalPages: computed(()=> AppState.totalPages),
       // loadTimedOut: computed(()=> AppState.loadTimedOut),
@@ -198,7 +213,7 @@ export default {
       // }
     }
   },
-  components: {Poster, PostCard, AdCard, PageTurner, SearchBar}
+  components: { Poster, PostCard, AdCard, PageTurner, SearchBar, ProfileIcon }
 }
 
 </script>
@@ -225,6 +240,11 @@ export default {
 
 }
 .user-forms{
-  margin-top: 64px;
+  margin-top: 70px;
+}
+.profile-bg{
+  height: 20vh;
+  background-position: center;
+  background-size: cover;
 }
 </style>

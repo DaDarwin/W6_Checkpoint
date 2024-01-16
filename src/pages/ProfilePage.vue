@@ -98,6 +98,8 @@
 
                 </div>
 
+                <PageTurner :profile="profile" class="mb-2"/>
+
                 <!-- <div v-for="post in profilePosts">
 
                     <PostCard v-if="!posts.includes(post)"/>

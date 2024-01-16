@@ -1,7 +1,7 @@
 <template>
-    <form @submit.prevent="addSearch()" class="mt-2">
-        <input v-model="searchQuery.query" id="search" type="text">
-        <button>Submit</button>
+    <form @submit.prevent="addSearch()" class="d-flex rounded overflow-hidden">
+        <input v-model="searchQuery.query" id="search" type="text" class="w-75 form-control border border-secondary border-end-0 rounded-end-0" placeholder="Search...">
+        <button class="w-25 btn btn-outline-info rounded-start-0">Submit</button>
     </form>
 </template>
 

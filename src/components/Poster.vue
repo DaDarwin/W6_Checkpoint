@@ -1,11 +1,12 @@
 <template>
-    <div v-if="account.id" class="mt-5">
-        <form @submit.prevent="makePost()" class="mt-5 row">
-            <textarea v-model="postData.body" minlength="1" maxlength="5000" rows="10" name="post-body" id="post-body" type="text" class="col-12"/>
-            <input v-model="postData.imgUrl" type="text" class="col-12 my-1">
-            <button type="submit" class="col-12">Submit</button>
+        <form @submit.prevent="makePost()" v-if="account.id" class="mt-1 p-1 border border-secondary rounded border-2">
+            <div class="fs-4 text-center text-secondary border border-secondary rounded p-1 mb-1">Make A Post!</div>
+            <textarea v-model="postData.body" minlength="1" maxlength="5000" rows="10" name="post-body" id="post-body" type="text" class="m-0 w-100 form-control" placeholder="Post Body"/>
+            <input v-model="postData.imgUrl" type="text" class="my-1 w-100 form-control" placeholder="http://ImgUrl">
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-outline-info">Submit</button>
+            </div>
         </form>
-    </div>
 </template>
 
 
