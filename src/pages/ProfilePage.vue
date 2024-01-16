@@ -98,7 +98,8 @@
 
                 </div>
 
-                <PageTurner :profile="profile" class="mb-2"/>
+                <button @click="goUp()" class="btn btn-outline-info w-100 mb-2"><i class="mdi mdi-arrow-up"></i></button>
+
 
                 <!-- <div v-for="post in profilePosts">
 
@@ -135,7 +136,7 @@ export default {
         const routeProfile = computed(() => route.params.profileId)
 
         function scrollToTop(){
-            window.scrollTo({top:0, left:0, behavior: 'instant'})
+            window.scrollTo({top:0, left:0, behavior: 'smooth'})
         }
 
         async function findProfile(){
@@ -192,6 +193,9 @@ export default {
                 profile: computed(()=> AppState.profile),
                 posts: computed(()=> AppState.posts),
                 loadTimedOut: computed(()=> AppState.loadTimedOut),
+                goUp(){
+                    scrollToTop()
+                }
 
                 // loadNewPosts: ()=>{//This entire function and sub-function is bad but I'm going to die on this hill sadly, also i copy & pasted this yes
         

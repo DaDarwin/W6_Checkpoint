@@ -13,12 +13,10 @@
 <script>
 import { computed } from 'vue'
 import { AppState } from './AppState'
-import { postService } from './services/PostService'
 import Navbar from './components/Navbar.vue'
 
 export default {
   setup() {
-    
     return {
       appState: computed(() => AppState)
       

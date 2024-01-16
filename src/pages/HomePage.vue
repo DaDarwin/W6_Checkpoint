@@ -69,7 +69,7 @@
 
       </div>
 
-      <PageTurner class="mb-2"/>
+      <button @click="goUp()" class="btn btn-outline-info w-100 mb-2"><i class="mdi mdi-arrow-up"></i></button>
 
 
 
@@ -131,7 +131,7 @@ export default {
     // }
 
     function scrollToTop(){
-      window.scrollTo({top:0, left:0, behavior: 'instant'})
+      window.scrollTo({top:0, left:0, behavior: 'smooth'})
     }
 
     // async function loadNewPostsSub(){//The sub-function
@@ -158,7 +158,10 @@ export default {
       posts2: computed(()=> AppState.posts.slice(5, 15)),
       posts3: computed(()=> AppState.posts.slice(15)),
       ads: computed(()=> AppState.ads),
-      account: computed(()=> new Profile(AppState.account))
+      account: computed(()=> new Profile(AppState.account)),
+      goUp(){
+        scrollToTop()
+      }
       // page: computed(()=> AppState.page),
       // totalPages: computed(()=> AppState.totalPages),
       // loadTimedOut: computed(()=> AppState.loadTimedOut),

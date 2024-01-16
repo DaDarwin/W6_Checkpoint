@@ -40,31 +40,40 @@ export default {
 
     setup(props){
         const route = useRoute()
-        const query = computed(()=> AppState.query)
+        let query = computed(()=> AppState.query)
+        let i = 0
         onMounted(()=> {
             // profileService.clearProfile()
             // postService.clearPosts()
             // postService.clearSearch()
             // getPosts(1)
             getAds()
+            // 
+            if(i == 0){
+                i ++
+                getPosts(1)
+
+            }
         })
         
-        getPosts(1)
 
         
-        watch(query, ()=>{
-            logger.log(query)
-            getPosts(1)})
+        // watch(query, ()=>{
+        //         logger.log(query.value)
+        //         getPosts(1)
+        //     }
+        // )
+
             
         async function getPosts(page){
             try {
                 let url = ''
 
-                if(route.name == 'Home'){
-                    url = `api/posts?page=${page}`
-                }
-                else if(query.value){
+                if(query.value){
                     url = `api/posts?query=${query.value}&page=${page}`
+                }
+                else if(route.name == 'Home'){
+                    url = `api/posts?page=${page}`
                 }
                 else if(props.profile.id){
                     logger.log(props.profile.id)
